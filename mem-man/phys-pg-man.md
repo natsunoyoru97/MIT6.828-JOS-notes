@@ -26,7 +26,9 @@ But note that we also need to handle some **corner cases** :
 - If we're **out of memory**, ``boot_alloc`` should panic.
 
 How do we know we're out of memory? Here we have to see ``inc/memlayout.h``, as the header file has already provided the virtual memory map:
-![Virtual Memory Map](virtu-mem-map.png)
+
+<img src="./virtu-mem-map.png" width=200>
+
 Note the part from ``KERNBASE, KSTACKTOP`` to ``4 Gig``, as the space is for JOS to remap the physical memory. 
 
 Given the definition of ``PTSIZE`` in ``inc/mmu.h``:
