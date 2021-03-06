@@ -28,6 +28,7 @@ Note: To make sure the notes can guide you **step-by-step** and make you underst
 
 ### 2. Memory Management
 - [Part 1: Physical Page Management](mem-man/phys-pg-man.md)
+- [Part 2: Virtual Memory](mem-man/virtu-mem.md)
 
 ### 3. User Environment
 

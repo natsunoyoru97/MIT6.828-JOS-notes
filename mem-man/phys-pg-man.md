@@ -80,6 +80,17 @@ memset(pages, 0, npages);
 ```
 
 ## 3. page_init()
+Note these variables declared in ``kern/pmap.c`` at the very start, as we will use most of them to implement this function.
+```c
+// These variables are set by i386_detect_memory()
+size_t npages; // Amount of physical memory (in pages)
+static size_t npages_basemem; // Amount of base memory (in pages)
+
+// These variables are set in mem_init()
+pde_t *kern_pgdir;	// Kernel's initial page directory
+struct PageInfo *pages;	// Physical page state array
+static struct PageInfo *page_free_list;	// Free list of physical pages
+```
 Now we need to do four things:
 - Mark physical page 0 as in use.
 - The rest of base memory, ``[PGSIZE, npages_basemem * PGSIZE)`` is free.
