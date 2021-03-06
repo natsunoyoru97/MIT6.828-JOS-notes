@@ -48,3 +48,4 @@ Note: To make sure the notes can guide you **step-by-step** and make you underst
 ## See Also
 
 - [MIT6.828Labs-JOS](https://github.com/hehao98/MIT6.828Labs-JOS/), with very consideration to handle the corner cases and some extra challenges.
+- [bysui的博客](https://blog.csdn.net/bysui), with detailed explaination of the JOS kernel. (Note: The blog is in Chinese)
