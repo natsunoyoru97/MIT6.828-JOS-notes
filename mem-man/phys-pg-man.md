@@ -27,7 +27,7 @@ But note that we also need to handle some **corner cases** :
 
 How do we know we're out of memory? Here we have to see ``inc/memlayout.h``, as the header file has already provided the virtual memory map:
 
-<img src="./virtu-mem-map.png" width=200>
+<img src="./virtu-mem-map.png" width=500>
 
 Note the part from ``KERNBASE, KSTACKTOP`` to ``4 Gig``, as the space is for JOS to remap the physical memory. 
 
