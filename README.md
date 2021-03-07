@@ -5,7 +5,7 @@ Note: To make sure the notes can guide you **step-by-step** and make you underst
 
 (You may wonder if there is a Chinese version. Hmmm, for now I would say, not this time. Maybe I'll think about it when I finish the English version.)
 
-**DISCLAIMER: All the materials provided are to help you make your own answer. You would DEFINITELY NOT take the solutions as your own, as it is all YOUR DUTY to keep the academic integrity.**
+**DISCLAIMER: All the materials provided are to help you make your own answer. You could DEFINITELY NOT take the solutions as your own, as it is all YOUR DUTY to keep the academic integrity.**
 
 <br>
 <br>

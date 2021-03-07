@@ -168,7 +168,7 @@ Things to do:
 
 Wait, did the instruction mention **Make sure to consider what happens when the same pp is re-inserted at the same virtual address in the same pgdir**? Where is the code to handle this case?
 
-We don't need to distinguish this case, actually. There's an elegant way to handle it. Do you notice the line ``pp->pp_ref++`` before we remove the redundant page? That's the key to make it work. We need to increment ``pp->pp_ref`` because we have to proceed to the next page count when the insertion succeeds. What about the case that ``PTE_ADDR(*pte) == page2pa(pp)``? Just increase the count of reference and let ``page_remove`` do other works.
+We don't need to distinguish this case, actually. There's an elegant way to handle it. Do you notice the line ``pp->pp_ref++`` before we remove the redundant page? That's the key to make it work. We need to increment ``pp->pp_ref`` because we have added one more reference. What about the case that ``PTE_ADDR(*pte) == page2pa(pp)``? Just increase the count of reference and let ``page_remove`` do other works.
 
 ```c
 int
