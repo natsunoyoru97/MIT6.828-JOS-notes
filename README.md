@@ -1,7 +1,7 @@
 # MIT6.828-JOS-notes
 My step-by-step notes of the JOS kernel. All the notes not only to tell you HOW but also WHY.
 
-Note: To make sure the notes can guide you **step-by-step** and make you understand WHY, it may take a LONG time to upload a new note, and I can't promise that I would give the notes for ALL labs and homeworks. But I'll try my best :)
+Note: I will update the notes for **code to implement in the JOS kernel** at first. To make sure the notes can guide you **step-by-step** and make you understand WHY, it may take a LONG time to upload a new note, and I can't promise that I would give the notes for ALL labs and homeworks. But I'll try my best :)
 
 (You may wonder if there is a Chinese version. Hmmm, for now I would say, not this time. Maybe I'll think about it when I finish the English version.)
 
@@ -29,6 +29,7 @@ Note: To make sure the notes can guide you **step-by-step** and make you underst
 ### 2. Memory Management
 - [Part 1: Physical Page Management](mem-man/phys-pg-man.md)
 - [Part 2: Virtual Memory](mem-man/virtu-mem.md)
+- [Part 3: Kernel Address Space](mem-man/kern-addr-space.md)
 
 ### 3. User Environment
 
