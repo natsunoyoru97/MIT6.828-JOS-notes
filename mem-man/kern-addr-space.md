@@ -50,6 +50,16 @@ Remind that ``boot_map_region`` has already set the flag ``PTE_P`` implictly.
 	boot_map_region(kern_pgdir, KERNBASE, 0xffffffff - KERNBASE + 1, 0, PTE_W);
 ```
 
+Once the mapping succeeds, qemu will show these messages:
+```
+check_page_free_list() succeeded!
+check_page_alloc() succeeded!
+check_page() succeeded!
+check_kern_pgdir() succeeded!
+check_page_free_list() succeeded!
+check_page_installed_pgdir() succeeded!
+```
+
 ## HomeWork
 
 To be finished
