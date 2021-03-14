@@ -5,7 +5,7 @@ Note: I will update the notes for **code to implement in the JOS kernel** at fir
 
 (You may wonder if there is a Chinese version. Hmmm, for now I would say, not this time. Maybe I'll think about it when I finish the English version.)
 
-**DISCLAIMER: All the materials provided are to help you make your own answer. You could DEFINITELY NOT take the solutions as your own, as it is all YOUR DUTY to keep the academic integrity.**
+**DISCLAIMER: All the materials provided are to help you make your own answer. You could DEFINITELY NOT take the solutions as your own, as it is all YOUR RESPONSIBILITY to keep the academic integrity.**
 
 <br>
 <br>
@@ -20,9 +20,7 @@ Note: I will update the notes for **code to implement in the JOS kernel** at fir
 <!--
 - The View of the JOS kernel
 -->
-<!--
 - [Code Carefully and Coherently](get-started/code-carefully-and-coherently.md)
--->
 
 ### 1. Booting a PC
 
