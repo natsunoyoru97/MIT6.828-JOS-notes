@@ -70,7 +70,7 @@ check_page_free_list() succeeded!
 check_page_installed_pgdir() succeeded!
 ```
 
-## HomeWork
+## Homework
 
 2. To solve this question, we need to look at virtual memory map in ``inc/memlayout.h`` again. 
 
