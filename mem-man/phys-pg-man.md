@@ -90,7 +90,7 @@ boot_alloc(uint32_t n)
 Just code as the instruction mentioned. ``boot_alloc`` is of great help to handle this, and be aware of the size of ``struct PageInfo``.
 ```c
 pages = (struct PageInfo *) boot_alloc(npages * sizeof(struct PageInfo));
-memset(pages, 0, npages);
+memset(pages, 0, npages * sizeof(struct PageInfo));
 ```
 
 ## 3. page_init()

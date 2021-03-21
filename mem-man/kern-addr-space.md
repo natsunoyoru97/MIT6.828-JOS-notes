@@ -27,7 +27,7 @@ DOUBT:
 It seems that there are **two** blocks to set up.
 
 ```c
-//////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////
 	// Map 'pages' read-only by the user at linear address UPAGES
 	// Permissions:
 	//    - the new image at UPAGES -- kernel R, user R
