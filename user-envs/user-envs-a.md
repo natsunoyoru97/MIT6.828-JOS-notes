@@ -155,7 +155,10 @@ the page directory to the page table**.
 Moreover, 
 > You must also do something with the program's entry point, to make sure that the environment starts executing there.
 
-Now take a glance at ``env_alloc`` in ``kern/env.c``:
+Note **Basics of Protected Control Transfer** in the handout of Lab 3:
+> From the appropriate entry in this table the processor loads: the value to load into the instruction pointer (``EIP``) register, pointing to the kernel code designated to handle that type of exception.
+
+And now take a glance at ``env_alloc`` in ``kern/env.c``:
 
 ```c
 // Set up appropriate initial values for the segment registers.
