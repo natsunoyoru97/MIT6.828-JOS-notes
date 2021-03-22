@@ -297,7 +297,7 @@ To add an entry point in ``trapentry.S``, we'd better note these two functions:
 ```
 We have to identify the two different cases and use these macros case by case. Look at [section 9.10 of the i386 reference](https://pdos.csail.mit.edu/6.828/2018/readings/i386/s09_10.htm):
 
-![Error-Code Summary](table9-7.png)
+<img src="./table9-7.png" width=600>
 
 The thing we need to do is to bind the handler defined to the constants defined in ``inc/trap.h``.
 
@@ -482,7 +482,7 @@ trap_init(void)
 
 Now run ``make qemu`` to run the JOS kernel. If things goes well, your command interface will look like this:
 
-<img src="./result1.png" width=500>
+<img src="./result1.png" width=600>
 
 You can also run ``make grade`` to see how many marks you have gained in part A.
 
