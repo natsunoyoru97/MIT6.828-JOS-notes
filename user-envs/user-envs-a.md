@@ -150,7 +150,7 @@ lcr3(PADDR(kern_pgdir));
 ```
 
 To conclude, we have to use ``lcr3`` to **switch from 
-the page directory to the table table**.
+the page directory to the page table**.
 
 Moreover, 
 > You must also do something with the program's entry point, to make sure that the environment starts executing there.
