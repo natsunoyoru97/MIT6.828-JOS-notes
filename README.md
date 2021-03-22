@@ -29,7 +29,8 @@ Note: I will update the notes for **code to implement in the JOS kernel** at fir
 - [Part 2: Virtual Memory](mem-man/virtu-mem.md)
 - [Part 3: Kernel Address Space](mem-man/kern-addr-space.md)
 
-### 3. User Environment
+### 3. User Environments
+- [Part A: User Environments](user/../user-envs/user-envs-a.md)
 
 ### 4. Preemptive Multitasking
 
