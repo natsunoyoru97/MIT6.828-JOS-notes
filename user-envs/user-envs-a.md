@@ -491,4 +491,16 @@ You can also run ``make grade`` to see how many marks you have gained in part A.
 
 ## Questions
 
-To be finished
+### 1. What is the purpose of having a individual handler function for each exception/interrupt?
+
+Take a glance at the declaration of parameters in the macro ``SETGATE``:
+```c
+#define SETGATE(gate, istrap, sel, off, dpl)
+```
+Note the handler is a **function pointer** and it points to the parameter ``off`` which binds to the trap number respectively. We have to make the handler points to its own trap number.
+
+### 2. In ``user/softint``, why should this produce interrupt vector 13? What happens if the kernel actually allows softint's int $14 instruction to invoke the kernel's page fault handler (which is interrupt vector 14)?
+
+``user/softint`` runs in the user mode which is under privilege level 3, so it cannot call the intrrupt vector 13 under privilege level 0 in the kernel mode.
+
+If so, the process under the user mode will be able to use system call, resulting in the aftermath that malicious codes invade the kernel.
