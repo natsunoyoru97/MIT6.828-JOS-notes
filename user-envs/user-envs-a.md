@@ -1,4 +1,4 @@
-# Lab 3: User Environments, Part A
+# Lab 3, Part A: User Environments and Exception Handling
 
 ## Exercise 1
 
