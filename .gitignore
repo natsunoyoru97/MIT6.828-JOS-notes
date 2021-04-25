@@ -1,0 +1,35 @@
+# folders
+Backups
+blob_storage
+Cache
+CachedData
+CachedExtensions
+Code Cache
+Cookies
+Cookies-journal
+CrashPad
+Dictionaries
+GPUCache
+Local Storage
+logs
+Session Storage
+User
+
+languagepacks.json
+rapid_render.json
+storage.json
+
+CrashpadMetrics-active.pma
+
+TransportSecurity
+machineid
+Network Persistent State
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

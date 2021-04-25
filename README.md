@@ -31,7 +31,7 @@ Note: I will update the notes for **code to implement in the JOS kernel** at fir
 
 ### 3. User Environments
 - [Part A: User Environments and Exception Handling](user/../user-envs/user-envs-a.md)
-<!-- - [Part B: Page Faults, Breakpoints Exceptions, and System Calls](user/../user-envs/user-envs-b.md) -->
+- [Part B: Page Faults, Breakpoints Exceptions, and System Calls](user/../user-envs/user-envs-b.md)
 
 ### 4. Preemptive Multitasking
 

@@ -20,20 +20,20 @@ Code as the instruction mentioned. Note the order to insert each environment, an
 void
 env_init(void)
 {
-	// Set up envs array
-	// LAB 3: Your code here.
-	int i;
+    // Set up envs array
+    // LAB 3: Your code here.
+    int i;
 
-	for (i = NENV - 1; i >= 0; --i) {
-		envs[i].env_status = ENV_FREE;
-		envs[i].env_id = 0;
-		envs[i].env_link = env_free_list;
+    for (i = NENV - 1; i >= 0; --i) {
+        envs[i].env_status = ENV_FREE;
+        envs[i].env_id = 0;
+        envs[i].env_link = env_free_list;
         // Set the new head for each iteration
-		env_free_list = &envs[i];
-    }
+        env_free_list = &envs[i];
+     }
 
-	// Per-CPU part of the initialization
-	env_init_percpu();
+    // Per-CPU part of the initialization
+    env_init_percpu();
 }
 
 ```
@@ -46,31 +46,31 @@ The thing this function does is to allocate a page directory and set the pointer
 static int
 env_setup_vm(struct Env *e)
 {
-	int i;
-	struct PageInfo *p = NULL;
+    int i;
+    struct PageInfo *p = NULL;
 
-	// Allocate a page for the page directory
-	if (!(p = page_alloc(ALLOC_ZERO)))
-		return -E_NO_MEM;
-	
-	...
-	// LAB 3: Your code here.
-	p->pp_ref++;
-	e->env_pgdir = (pde_t *) page2kva(p);
+    // Allocate a page for the page directory
+    if (!(p = page_alloc(ALLOC_ZERO)))
+      	return -E_NO_MEM;
 
-	// Map the VA below UTOP, which is empty
-	memset(e->env_pgdir, 0, PDX(UTOP));
+    ...
+    // LAB 3: Your code here.
+    p->pp_ref++;
+    e->env_pgdir = (pde_t *) page2kva(p);
 
-	// Map the VA above UTOP, use kern_pgdir as the template
-	for (i = PDX(UTOP); i < NPDENTRIES; ++i) {
-		e->env_pgdir[i] = kern_pgdir[i];
-	}
+    // Map the VA below UTOP, which is empty
+    memset(e->env_pgdir, 0, PDX(UTOP));
 
-	// UVPT maps the env's own page table read-only.
-	// Permissions: kernel R, user R
-	e->env_pgdir[PDX(UVPT)] = PADDR(e->env_pgdir) | PTE_P | PTE_U;
+    // Map the VA above UTOP, use kern_pgdir as the template
+    for (i = PDX(UTOP); i < NPDENTRIES; ++i) {
+      	e->env_pgdir[i] = kern_pgdir[i];
+    }
 
-	return 0;
+    // UVPT maps the env's own page table read-only.
+    // Permissions: kernel R, user R
+    e->env_pgdir[PDX(UVPT)] = PADDR(e->env_pgdir) | PTE_P | PTE_U;
+
+    return 0;
 }
 ```
 
@@ -89,27 +89,27 @@ Note there are some corner cases:
 static void
 region_alloc(struct Env *e, void *va, size_t len)
 {
-	// LAB 3: Your code here.
-	...
-	assert(len >= 0);
-	assert((uintptr_t) va + len < KSTACKTOP);
+    // LAB 3: Your code here.
+    ...
+    assert(len >= 0);
+    assert((uintptr_t) (va + len) < KSTACKTOP);
 
-	if (len == 0) return;
+    if (len == 0) return;
 
-	uintptr_t addr_start = (uintptr_t) ROUNDDOWN(va, PGSIZE);
-	uintptr_t addr_end = (uintptr_t) ROUNDUP(va + len, PGSIZE);
-	struct PageInfo *p = NULL;
-	uintptr_t addr;
+    uintptr_t addr_start = (uintptr_t) ROUNDDOWN(va, PGSIZE);
+    uintptr_t addr_end = (uintptr_t) ROUNDUP(va + len, PGSIZE);
+    struct PageInfo *p = NULL;
+    uintptr_t addr;
 
-	for (addr = addr_start; addr < addr_end; addr += PGSIZE) {
-		p = page_alloc(0);
-		if (p == NULL) {
-			panic("region_alloc(): no free page, allocation failed.");
-		}
-		if (page_insert(e->env_pgdir, p, (void *) addr, PTE_W | PTE_U) == -E_NO_MEM) {
-			panic("region_alloc(): error 4: no memory.");
-		}
-	}
+    for (addr = addr_start; addr < addr_end; addr += PGSIZE) {
+        p = page_alloc(0);
+        if (p == NULL) {
+          	panic("region_alloc(): no free page, allocation failed.");
+        }
+        if (page_insert(e->env_pgdir, p, (void *) addr, PTE_W | PTE_U) == -E_NO_MEM) {
+          	panic("region_alloc(): error 4: no memory.");
+        }
+    }
 }
 ```
 
@@ -190,35 +190,35 @@ static void
 load_icode(struct Env *e, uint8_t *binary)
 {
     // LAB 3: Your code here.
-	struct Elf * elfhdr = (struct Elf *) binary;
-	struct Proghdr *ph, *eph;
-	assert(elfhdr->e_magic == ELF_MAGIC);
-	
-	// Switch from the page directory to the table table
-	lcr3(PADDR(e->env_pgdir));
-	
-	ph = (struct Proghdr *) (binary + elfhdr->e_phoff);
-	eph = ph + elfhdr->e_phnum;
-	for (; ph < eph; ++ph) {
-		// Only load segments with ph->p_type == ELF_PROG_LOAD
-		if (ph->p_type != ELF_PROG_LOAD) {
-			continue;
-		}
-		if (ph->p_filesz > ph->p_memsz) {
-			panic("load_icode: the file of program header is too large to allocate.");
-		}
-		region_alloc(e, (void *) ph->p_va, ph->p_memsz);
-		memmove((void *) ph->p_va, binary + ph->p_offset, ph->p_filesz);
-		memset((void *) (ph->p_va + ph->p_filesz), 0, ph->p_memsz - ph->p_filesz);
-	}
+    struct Elf * elfhdr = (struct Elf *) binary;
+    struct Proghdr *ph, *eph;
+    assert(elfhdr->e_magic == ELF_MAGIC);
 
-	// Now map one page for the program's initial stack
-	// at virtual address USTACKTOP - PGSIZE.
+    // Switch from the page directory to the table table
+    lcr3(PADDR(e->env_pgdir));
 
-	// LAB 3: Your code here.
-	region_alloc(e, (void *) (USTACKTOP - PGSIZE), PGSIZE);
+    ph = (struct Proghdr *) (binary + elfhdr->e_phoff);
+    eph = ph + elfhdr->e_phnum;
+    for (; ph < eph; ++ph) {
+        // Only load segments with ph->p_type == ELF_PROG_LOAD
+        if (ph->p_type != ELF_PROG_LOAD) {
+          	continue;
+        }
+        if (ph->p_filesz > ph->p_memsz) {
+          	panic("load_icode: the file of program header is too large to allocate.");
+        }
+        region_alloc(e, (void *) ph->p_va, ph->p_memsz);
+        memmove((void *) ph->p_va, binary + ph->p_offset, ph->p_filesz);
+        memset((void *) (ph->p_va + ph->p_filesz), 0, ph->p_memsz - ph->p_filesz);
+    }
+
+    // Now map one page for the program's initial stack
+    // at virtual address USTACKTOP - PGSIZE.
+
+    // LAB 3: Your code here.
+    region_alloc(e, (void *) (USTACKTOP - PGSIZE), PGSIZE);
     // As mentioned in env_alloc
-	e->env_tf.tf_eip = elfhdr->e_entry;
+    e->env_tf.tf_eip = elfhdr->e_entry;
 }
 ```
 
@@ -230,14 +230,14 @@ Code as instruction mentioned. Note the type casting when allocating a new envir
 void
 env_create(uint8_t *binary, enum EnvType type)
 {
-	// LAB 3: Your code here.
-	struct Env * newenv;
-	if (env_alloc(&newenv, 0) < 0) {
-		panic("env_create(): env_alloc failed.");
-	}
+    // LAB 3: Your code here.
+    struct Env * newenv;
+    if (env_alloc(&newenv, 0) < 0) {
+      	panic("env_create(): env_alloc failed.");
+    }
 
-	load_icode(newenv, binary);
-	newenv->env_type = type;
+    load_icode(newenv, binary);
+    newenv->env_type = type;
 }
 ```
 
@@ -249,17 +249,17 @@ The instruction is clear to write the code.
 void
 env_run(struct Env *e)
 {
-	// LAB 3: Your code here.
-	if (curenv != NULL && curenv->env_status == ENV_RUNNING) {
-		e->env_status = ENV_RUNNABLE;
-	}
+    // LAB 3: Your code here.
+    if (curenv != NULL && curenv->env_status == ENV_RUNNING) {
+      	e->env_status = ENV_RUNNABLE;
+    }
 
-	curenv = e;
-	curenv->env_status = ENV_RUNNING;
-	curenv->env_runs++;
-	lcr3(PADDR(curenv->env_pgdir));
+    curenv = e;
+    curenv->env_status = ENV_RUNNING;
+    curenv->env_runs++;
+    lcr3(PADDR(curenv->env_pgdir));
 
-	env_pop_tf(&(curenv->env_tf));
+    env_pop_tf(&(curenv->env_tf));
 }
 
 ```
@@ -339,13 +339,13 @@ Then we fill the function ``_alltraps``.
 Now we take a look at the definition of ``struct Trapframe`` in ``inc/trap.h``:
 ```c
 struct Trapframe {
-	struct PushRegs tf_regs;
-	uint16_t tf_es;
-	uint16_t tf_padding1;
-	uint16_t tf_ds;
-	uint16_t tf_padding2;
-	uint32_t tf_trapno;
-	...
+    struct PushRegs tf_regs;
+    uint16_t tf_es;
+    uint16_t tf_padding1;
+    uint16_t tf_ds;
+    uint16_t tf_padding2;
+    uint32_t tf_trapno;
+    ...
 } __attribute__((packed));
 ```
 
@@ -358,16 +358,16 @@ The ``pushal`` instruction stores the 16-bit or 32-bit general registers, referr
  * Lab 3: Your code here for _alltraps
  */
  _alltraps:
-	pushl %ds
-	pushl %es
-	pushal
+    pushl %ds
+    pushl %es
+    pushal
 
-	movw $(GD_KD), %ax
-	movw %ax, %ds
-	movw %ax, %es
+    movw $(GD_KD), %ax
+    movw %ax, %ds
+    movw %ax, %es
 
-	pushl %esp
-	call trap
+    pushl %esp
+    call trap
 ```
 
 ### 2. trap.c
@@ -378,15 +378,15 @@ Now we take a glance at ``SETGATE`` macro in ``inc/mmu.h``:
 ```c
 #define SETGATE(gate, istrap, sel, off, dpl)			\
 {								\
-	(gate).gd_off_15_0 = (uint32_t) (off) & 0xffff;		\
-	(gate).gd_sel = (sel);					\
-	(gate).gd_args = 0;					\
-	(gate).gd_rsv1 = 0;					\
-	(gate).gd_type = (istrap) ? STS_TG32 : STS_IG32;	\
-	(gate).gd_s = 0;					\
-	(gate).gd_dpl = (dpl);					\
-	(gate).gd_p = 1;					\
-	(gate).gd_off_31_16 = (uint32_t) (off) >> 16;		\
+    (gate).gd_off_15_0 = (uint32_t) (off) & 0xffff;		\
+    (gate).gd_sel = (sel);					\
+    (gate).gd_args = 0;					\
+    (gate).gd_rsv1 = 0;					\
+    (gate).gd_type = (istrap) ? STS_TG32 : STS_IG32;	\
+    (gate).gd_s = 0;					\
+    (gate).gd_dpl = (dpl);					\
+    (gate).gd_p = 1;					\
+    (gate).gd_off_31_16 = (uint32_t) (off) >> 16;		\
 }
 ```
 
@@ -404,15 +404,15 @@ P.S. If you would like to know all the properties in the ``SETGATE`` marco, you 
 ```c
 // Gate descriptors for interrupts and traps
 struct Gatedesc {
-	unsigned gd_off_15_0 : 16;   // low 16 bits of offset in segment
-	unsigned gd_sel : 16;        // segment selector
-	unsigned gd_args : 5;        // # args, 0 for interrupt/trap gates
-	unsigned gd_rsv1 : 3;        // reserved(should be zero I guess)
-	unsigned gd_type : 4;        // type(STS_{TG,IG32,TG32})
-	unsigned gd_s : 1;           // must be 0 (system)
-	unsigned gd_dpl : 2;         // descriptor(meaning new) privilege level
-	unsigned gd_p : 1;           // Present
-	unsigned gd_off_31_16 : 16;  // high bits of offset in segment
+    unsigned gd_off_15_0 : 16;   // low 16 bits of offset in segment
+    unsigned gd_sel : 16;        // segment selector
+    unsigned gd_args : 5;        // # args, 0 for interrupt/trap gates
+    unsigned gd_rsv1 : 3;        // reserved(should be zero I guess)
+    unsigned gd_type : 4;        // type(STS_{TG,IG32,TG32})
+    unsigned gd_s : 1;           // must be 0 (system)
+    unsigned gd_dpl : 2;         // descriptor(meaning new) privilege level
+    unsigned gd_p : 1;           // Present
+    unsigned gd_off_31_16 : 16;  // high bits of offset in segment
 };
 ```
 And [section 9.5 of the i386 reference](https://pdos.csail.mit.edu/6.828/2018/readings/i386/s09_05.htm).
@@ -453,9 +453,9 @@ extern void handler_default();
 void
 trap_init(void)
 {
-	extern struct Segdesc gdt[];
+		extern struct Segdesc gdt[];
 
-	// LAB 3: Your code here.
+		// LAB 3: Your code here.
     SETGATE(idt[T_DIVIDE], false, GD_KT, handler_divide, 0);
     SETGATE(idt[T_DEBUG], false, GD_KT, handler_debug, 0);
     SETGATE(idt[T_NMI], false, GD_KT, handler_nmi, 0);
@@ -477,7 +477,7 @@ trap_init(void)
     SETGATE(idt[T_SYSCALL], false, GD_KT, handler_syscall, 3);
 
     // Per-CPU setup 
-	trap_init_percpu();
+		trap_init_percpu();
 }
 ```
 
@@ -491,7 +491,7 @@ You can also run ``make grade`` to see how many marks you have gained in part A.
 
 ## Questions
 
-### 1. What is the purpose of having a individual handler function for each exception/interrupt?
+**1. What is the purpose of having a individual handler function for each exception/interrupt?**
 
 Take a glance at the declaration of parameters in the macro ``SETGATE``:
 ```c
@@ -499,7 +499,7 @@ Take a glance at the declaration of parameters in the macro ``SETGATE``:
 ```
 Note the handler is a **function pointer** and it points to the parameter ``off`` which binds to the trap number respectively. We have to make the handler points to its own trap number.
 
-### 2. In ``user/softint``, why should this produce interrupt vector 13? What happens if the kernel actually allows softint's int $14 instruction to invoke the kernel's page fault handler (which is interrupt vector 14)?
+**2. In ``user/softint``, why should this produce interrupt vector 13? What happens if the kernel actually allows softint's int $14 instruction to invoke the kernel's page fault handler (which is interrupt vector 14)?**
 
 ``user/softint`` runs in the user mode which is under privilege level 3, so it cannot call the intrrupt vector 13 under privilege level 0 in the kernel mode.
 

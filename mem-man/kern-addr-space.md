@@ -100,28 +100,28 @@ There is physical memory allocated as the kernel stack, and the attribute named 
 	static void
 	i386_detect_memory(void)
 	{
-		size_t basemem, extmem, ext16mem, totalmem;
+	    size_t basemem, extmem, ext16mem, totalmem;
 
-		// Use CMOS calls to measure available base & extended memory.
-		// (CMOS calls return results in kilobytes.)
-		basemem = nvram_read(NVRAM_BASELO);
-		extmem = nvram_read(NVRAM_EXTLO);
-		ext16mem = nvram_read(NVRAM_EXT16LO) * 64;
+	    // Use CMOS calls to measure available base & extended memory.
+	    // (CMOS calls return results in kilobytes.)
+	    basemem = nvram_read(NVRAM_BASELO);
+	    extmem = nvram_read(NVRAM_EXTLO);
+	    ext16mem = nvram_read(NVRAM_EXT16LO) * 64;
 
-		// Calculate the number of physical pages available in both base
-		// and extended memory.
-		if (ext16mem)
-			totalmem = 16 * 1024 + ext16mem;
-		else if (extmem)
-			totalmem = 1 * 1024 + extmem;
-		else
-			totalmem = basemem;
+	    // Calculate the number of physical pages available in both base
+	    // and extended memory.
+	    if (ext16mem)
+	      	totalmem = 16 * 1024 + ext16mem;
+	    else if (extmem)
+	      	totalmem = 1 * 1024 + extmem;
+	    else
+	      	totalmem = basemem;
 
-		npages = totalmem / (PGSIZE / 1024);
-		npages_basemem = basemem / (PGSIZE / 1024);
+	    npages = totalmem / (PGSIZE / 1024);
+	    npages_basemem = basemem / (PGSIZE / 1024);
 
-		cprintf("Physical memory: %uK available, base = %uK, extended = %uK\n",
-			totalmem, basemem, totalmem - basemem);
+	    cprintf("Physical memory: %uK available, base = %uK, extended = %uK\n",
+	      totalmem, basemem, totalmem - basemem);
 	}
 	```
 

@@ -62,27 +62,27 @@ Hence, the code that handles the corner cases as a whole is:
 static void *
 boot_alloc(uint32_t n)
 {
-	static char *nextfree;	// virtual address of next byte of free memory
-	char *result;
+    static char *nextfree;	// virtual address of next byte of free memory
+    char *result;
 
-	if (!nextfree) {
-		extern char end[];
-		nextfree = ROUNDUP((char *) end, PGSIZE);
-	}
+    if (!nextfree) {
+        extern char end[];
+        nextfree = ROUNDUP((char *) end, PGSIZE);
+    }
 
-	if (n < 0) {
-		panic("boot_alloc(): the pages to be allocated cannot be negative\n");
-	}
-	result = nextfree;
-	if (n == 0) {
-		return result;
-	}
-	nextfree = ROUNDUP(nextfree + n, PGSIZE); 
-	if ((uintptr_t) nextfree >= KSTACKTOP + PTSIZE) {
-		panic("boot_alloc(): out of memory\n");
-	}
+    if (n < 0) {
+      	panic("boot_alloc(): the pages to be allocated cannot be negative\n");
+    }
+    result = nextfree;
+    if (n == 0) {
+      	return result;
+    }
+    nextfree = ROUNDUP(nextfree + n, PGSIZE); 
+    if ((uintptr_t) nextfree >= KSTACKTOP + PTSIZE) {
+      	panic("boot_alloc(): out of memory\n");
+    }
 
-	return result;
+    return result;
 }
 ```
 
@@ -142,37 +142,37 @@ So here is the code:
 ```c
 void
 page_init(void) {
-	// Mark physical page 0 as in use
-	pages[0].pp_ref = 1;
+    // Mark physical page 0 as in use
+    pages[0].pp_ref = 1;
 
-	// Map [PGSIZE, npages_basemem * PGSIZE)
-	size_t i; // npages_basemem is of type size_t
-	for (i = 1; i < npages_basemem; ++i) {
-		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
-		page_free_list = &pages[i];
-	}
+    // Map [PGSIZE, npages_basemem * PGSIZE)
+    size_t i; // npages_basemem is of type size_t
+    for (i = 1; i < npages_basemem; ++i) {
+        pages[i].pp_ref = 0;
+        pages[i].pp_link = page_free_list;
+        page_free_list = &pages[i];
+    }
 
-	// Map the IO hole [IOPHYSMEM, EXTPHYSMEM)
-	for ( ; i < (size_t) (EXTPHYSMEM / PGSIZE); ++i) {
-		pages[i].pp_ref = 1;
-	}
+    // Map the IO hole [IOPHYSMEM, EXTPHYSMEM)
+    for ( ; i < (size_t) (EXTPHYSMEM / PGSIZE); ++i) {
+        pages[i].pp_ref = 1;
+    }
 
-	// Map extended memory
-	// Note: boot_alloc(0) returns a kernel virtual address, here we need to convert it to a physical address
-	physaddr_t first_free_physaddr = PADDR(boot_alloc(0));
-	// Calculate the number of pages in use
-	size_t first_free_page_num = first_free_physaddr / PGSIZE;
-	// Mark the memory used by the kernel and pages in use
-	for ( ; i < first_free_page_num; ++i) {
-		pages[i].pp_ref = 1;
-	}
-	// Mark other pages
-	for ( ; i < npages; ++i) {
-		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
-		page_free_list = & pages[i];
-	}
+    // Map extended memory
+    // Note: boot_alloc(0) returns a kernel virtual address, here we need to convert it to a physical address
+    physaddr_t first_free_physaddr = PADDR(boot_alloc(0));
+    // Calculate the number of pages in use
+    size_t first_free_page_num = first_free_physaddr / PGSIZE;
+    // Mark the memory used by the kernel and pages in use
+    for ( ; i < first_free_page_num; ++i) {
+      	pages[i].pp_ref = 1;
+    }
+    // Mark other pages
+    for ( ; i < npages; ++i) {
+        pages[i].pp_ref = 0;
+        pages[i].pp_link = page_free_list;
+        page_free_list = & pages[i];
+    }
 }
 ```
 
@@ -182,21 +182,21 @@ We just code as the instruction mentioned again. Note that the function ``page2k
 ```c
 struct PageInfo *
 page_alloc(int alloc_flags) {
-	struct PageInfo* pp;
+    struct PageInfo* pp;
 
-	if (!page_free_list) {
-		return NULL;
-	}
-	pp = page_free_list;
-	// Make page_free_list to point its next page
-	page_free_list = page_free_list->pp_link
-	pp->pp_link = NULL;
+    if (!page_free_list) {
+      	return NULL;
+    }
+    pp = page_free_list;
+    // Make page_free_list to point its next page
+    page_free_list = page_free_list->pp_link
+    pp->pp_link = NULL;
 
-	if (alloc_flags & ALLOC_ZERO) {
-		void * va = page2kva(pp);
-		memset(va, '\0', PGSIZE);
-	}
-	return pp;
+    if (alloc_flags & ALLOC_ZERO) {
+        void * va = page2kva(pp);
+        memset(va, '\0', PGSIZE);
+    }
+    return pp;
 }
 ```
 
@@ -210,10 +210,10 @@ page_free(struct PageInfo *pp) {
 	// Hint: You may want to panic if pp->pp_ref is nonzero or
 	// pp->pp_link is not NULL.
 	if (pp->pp_ref != 0) {
-		panic("page_free(): the page is still in use!\n");
+			panic("page_free(): the page is still in use!\n");
 	}
 	if (pp->pp_link != NULL) {
-		panic("page_free(): the page is empty.\n");
+			panic("page_free(): the page is empty.\n");
 	}
 	pp->pp_link = page_free_list;
 	page_free_list = pp;
