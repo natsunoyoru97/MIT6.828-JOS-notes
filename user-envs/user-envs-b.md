@@ -9,9 +9,9 @@ First, we need to handle **page faults**. To do this, we have to detect the type
 
 ```c
 struct Trapframe {
-  	...
-		uint32_t tf_trapno;
-  	...
+    ...
+    uint32_t tf_trapno;
+    ...
 }
 ```
 
@@ -21,9 +21,9 @@ And also in ``kern/trap.c``:
 void
 print_trapframe(struct Trapframe *tf)
 {
-	...
-	cprintf("  trap 0x%08x %s\n", tf->tf_trapno, trapname(tf->tf_trapno));
-  ...
+    ...
+    cprintf("  trap 0x%08x %s\n", tf->tf_trapno, trapname(tf->tf_trapno));
+    ...
 }
 ```
 
@@ -34,8 +34,8 @@ static void
 trap_dispatch(struct Trapframe *tf)
 {
     int32_t ret;
-		// Handle processor exceptions.
-		// LAB 3: Your code here.
+    // Handle processor exceptions.
+    // LAB 3: Your code here.
     switch (tf->tf_trapno) {
         case (T_PGFLT):
             page_fault_handler(tf);
