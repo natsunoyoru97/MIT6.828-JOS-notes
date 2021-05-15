@@ -14,12 +14,9 @@ Note: I will update the notes for **code to implement in the JOS kernel** at fir
 ## Contents
 
 ### 0. Before Get Started
-<!--
-- [Get Ready: Build Your Own Toolchain](get-started/build-your-own-toolchain.md)
--->
-<!--
-- The View of the JOS kernel
--->
+<!-- - [Get Ready: Build Your Own Toolchain](get-started/build-your-own-toolchain.md)-->
+<!-- - The View of the JOS kernel -->
+
 - [Code Carefully and Coherently](get-started/code-carefully-and-coherently.md)
 
 ### 1. Booting a PC
@@ -30,10 +27,16 @@ Note: I will update the notes for **code to implement in the JOS kernel** at fir
 - [Part 3: Kernel Address Space](mem-man/kern-addr-space.md)
 
 ### 3. User Environments
-- [Part A: User Environments and Exception Handling](user/../user-envs/user-envs-a.md)
-- [Part B: Page Faults, Breakpoints Exceptions, and System Calls](user/../user-envs/user-envs-b.md)
+- [Part A: User Environments and Exception Handling](user-envs/user-envs-a.md)
+- [Part B: Page Faults, Breakpoints Exceptions, and System Calls](user-envs/user-envs-b.md)
 
 ### 4. Preemptive Multitasking
+
+<!-- - [Part A: Multiprocessor Support and Cooperative Multitasking](preemptive-multitasking/part-a.md) -->
+
+<!-- - [Part B: Copy-on-Write Fork](preemptive-multitasking/part-b.md) -->
+
+<!-- - [Part C: Preemptive Multitasking and Inter-Process communication (IPC)](preemptive-multitasking/part-c.md) -->
 
 ### 5. File system, Spawn and Shell
 

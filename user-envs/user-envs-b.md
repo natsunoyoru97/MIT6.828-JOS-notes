@@ -100,6 +100,35 @@ Since we have already implemented the handler for interrupt vector ``T_SYSCALL``
 
 ### 3.1 syscall
 
+Before changing ``syscall``, we have to set up another interrupt vector in ``kern/trap.c``:
+
+```c
+extern void handler_syscall();
+...
+
+void
+trap_init(void)
+{
+		extern struct Segdesc gdt[];
+  	...
+    SETGATE(idt[T_SYSCALL], false, GD_KT, handler_syscall, 3);
+  	
+  	// Per-CPU setup 
+		trap_init_percpu();
+}
+```
+
+And in ``kern/trapentry.S``:
+
+```c
+/*
+ * Lab 3: Your code here for generating entry points for the different traps.
+ */
+TRAPHANDLER_NOEC(handler_syscall, T_SYSCALL)
+```
+
+
+
 Note what has been declared in ``inc/syscall.h``:
 
 ```c

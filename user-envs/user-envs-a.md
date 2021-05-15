@@ -304,7 +304,7 @@ We have to identify the two different cases and use these macros case by case. L
 
 The thing we need to do is to bind the handler defined to the constants defined in ``inc/trap.h``.
 
-```
+```assembly
 .text
 
 /*
@@ -329,8 +329,6 @@ TRAPHANDLER(handler_stack, T_STACK)
 TRAPHANDLER(handler_gpflt, T_GPFLT)
 TRAPHANDLER(handler_pgflt, T_PGFLT)
 TRAPHANDLER(handler_align, T_ALIGN)
-
-TRAPHANDLER_NOEC(handler_syscall, T_SYSCALL)
 ```
 
 Then we fill the function ``_alltraps``.
@@ -445,8 +443,6 @@ extern void handler_fperr();
 extern void handler_align();
 extern void handler_mchk();
 extern void handler_simderr();
-extern void handler_syscall();
-extern void handler_default();
 
 ...
 
@@ -474,7 +470,6 @@ trap_init(void)
     SETGATE(idt[T_ALIGN], false, GD_KT, handler_align, 0);
     SETGATE(idt[T_MCHK], false, GD_KT, handler_mchk, 0);
     SETGATE(idt[T_SIMDERR], false, GD_KT, handler_simderr, 0);
-    SETGATE(idt[T_SYSCALL], false, GD_KT, handler_syscall, 3);
 
     // Per-CPU setup 
 		trap_init_percpu();
@@ -483,11 +478,7 @@ trap_init(void)
 
 ## Summing Up
 
-Now run ``make qemu`` to run the JOS kernel. If things goes well, your command interface will look like this:
-
-<img src="./result1.png" width=600>
-
-You can also run ``make grade`` to see how many marks you have gained in part A.
+You can run ``make grade`` to see how many marks you have gained in part A.
 
 ## Questions
 
